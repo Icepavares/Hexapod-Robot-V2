@@ -220,15 +220,42 @@ Battery (3S 11.1V)
 
 ---
 
-## Open Questions / Future Work
+Core robot operation
 
-- [ ] Finalize body frame redesign for 15cm circular plate with side battery pockets
-- [ ] PCIe connector physical access in body design (required for AI HAT+ upgrade)
-- [ ] Port V1 Arduino kinematics to Python on Pi (only servo command layer needs rewriting)
-- [ ] Design minimal buffer PCB (SN74HCT241 + servo headers + 5V buck)
-- [ ] Mobile app design (WebSocket joystick interface + camera feed)
-- [ ] Gait tuning for new servo feedback data (temperature/position monitoring)
-- [ ] Decide: AI HAT+ 13 TOPS vs 26 TOPS when budget allows
+Walk using tripod/ripple gait
+Inverse kinematics for leg movement
+Balance and tilt compensation via IMU
+
+Control
+
+Mobile phone control via Wi-Fi (WebSocket)
+Joystick-style input replacing Xbox controller
+Live camera feed to phone
+
+AI / Vision
+
+Object detection (basic, runs on Pi 5 CPU)
+Pet/animal recognition
+Environment awareness
+Future: upgraded inference via AI HAT+
+
+Feedback & Monitoring
+
+OLED state display on robot (battery, Wi-Fi, gait mode, AI label)
+Per-servo temperature and voltage monitoring (from bus servo feedback)
+Battery voltage tracking via Pi
+
+Communication architecture
+
+Pi as main brain
+Bus servo UART daisy chain
+WebSocket server on Pi for phone connection
+
+Future / stretch goals
+
+Run larger AI model via AI HAT+ accelerator
+Autonomous navigation (no LIDAR planned — camera only)
+Pet interaction behaviors
 
 ---
 
