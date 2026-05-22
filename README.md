@@ -259,7 +259,7 @@ Pet interaction behaviors
 
 ---
 
-##After carful consideration of choosing Electronic device, I got the summarry list of the hardware right here.
+##After carful consideration of choosing Electronic device(22/05/2026), I got the summarry list of the hardware right here.
 
 # Hexapod Robot System Architecture
 
@@ -275,12 +275,13 @@ Pet interaction behaviors
 ### Why Not Alternatives
 - Arduino: insufficient for ROS2 and advanced robotics workloads
 - Jetson: higher cost and power consumption, unnecessary for current development stage
+- 4GB on raspberry pi will not provide enough headroom if i applied SLAM, NAV and AI
 
 ---
 
 # Power System
 
-## Pi Voltage Regulator
+## Pi Voltage Regulator (since I want to use the main power source only from 3s LiPo battery we need to step the voltage down)
 ### Selected
 - 52Pi RPi 5 PD Board
 
@@ -319,6 +320,9 @@ Pet interaction behaviors
 - Inconsistent QC
 - Higher voltage sag
 - Less reliable capacity and discharge ratings
+
+### Honestly
+- I found 3500mAh are from the brand that I need to hesitate, there is more good option which is Sunpadow 3S 5200mAh, but it's currently out out stock. So, i need to buy a 7100mAh instead, but I think 130g. different is acceptable for me, but the problem is the length of battery is longer than the one I want around 2cm++. 
 
 ---
 
