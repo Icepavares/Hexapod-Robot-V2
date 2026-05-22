@@ -259,184 +259,237 @@ Pet interaction behaviors
 
 ---
 
-After carful consideration of choosing Electronic device, I got the summarry list of the hardware right here.
+##After carful consideration of choosing Electronic device, I got the summarry list of the hardware right here.
 
-Main Compute
-Selected
-Raspberry Pi 5 8GB
-Why
-Powerful enough for ROS2, IK, trajectory planning, SLAM, and future AI
-Large ecosystem and easier development
-Good balance between performance, power, and cost
-Why Not Alternatives
-Arduino: insufficient for ROS2 + advanced robotics stack
-Jetson: expensive, higher power/thermal requirements, unnecessary for current stage
-Power System
-Pi Voltage Regulator
-Selected
-52Pi RPi 5 PD Board
-Why
-Proper USB-PD handshake for Pi5 full 5V 5A operation
-Better protection than GPIO power injection
-Supports future AI HAT / SLAM power demand
-Directly converts 3S LiPo → stable Pi5 power
-Why Not Generic Buck Converter
-No PD negotiation
-Possible undervoltage/current limitation
-Lower reliability and protection
-Why Not GPIO Power
-Bypasses protection circuitry
-Less safe and less robust
+# Hexapod Robot System Architecture
+
+## Main Compute
+### Selected
+- Raspberry Pi 5 (8GB)
+
+### Why
+- Supports ROS2, IK, trajectory planning, SLAM, and future AI expansion
+- Large ecosystem and strong community support
+- Good balance between performance, power consumption, and cost
+
+### Why Not Alternatives
+- Arduino: insufficient for ROS2 and advanced robotics workloads
+- Jetson: higher cost and power consumption, unnecessary for current development stage
+
+---
+
+# Power System
+
+## Pi Voltage Regulator
+### Selected
+- 52Pi RPi 5 PD Board
+
+### Why
+- Provides proper USB-PD negotiation for Raspberry Pi 5 full 5V 5A operation
+- More reliable and safer than GPIO power injection
+- Supports future AI HAT / SLAM expansion
+- Directly converts 3S LiPo voltage to stable Pi5 power
+
+### Why Not Generic Buck Converter
+- No USB-PD handshake
+- Possible current limitation and undervoltage issues
+- Less reliable for Pi5 high-load operation
+
+### Why Not GPIO Power Injection
+- Bypasses Pi protection circuitry
+- Less safe and less robust long-term
+
+---
+
+## Battery
+### Current Preferred Choice
+- Sunpadow 3S 11.1V 7100mAh 70C XT60 LiPo
+
+### Why
+- Better voltage stability under dynamic servo load
+- Better reputation and QC compared to generic LiPo brands
+- Sufficient runtime for future full hexapod operation
+- Enough headroom for future sensors and AI modules
+
+### Why Not Smaller Capacity Yet
+- Lower runtime
+- Higher voltage sag under load
+
+### Why Not Cheap Generic LiPo
+- Inconsistent QC
+- Higher voltage sag
+- Less reliable capacity and discharge ratings
+
+---
+
+# Servo System
+
+## Selected
+- Hiwonder HX-35HM Intelligent Serial Bus Servo
+
+### Why
+- Serial bus communication with telemetry feedback
+- Better synchronization and scalability than PWM servos
+- Suitable for ROS2-based robotics architecture
+- More accessible and lower shipping cost compared to HX-30HM
+
+### Why Not Standard PWM Servo
+- No telemetry feedback
+- Harder synchronization
+- Poor scalability for 18 DOF system
+
+### Why HX-30HM Not Selected Yet
+- Higher shipping cost
+- Current stage focuses on software and architecture validation first
+
+---
+
+# Servo Communication
+
+## Selected
+- Hiwonder BusLinker V3.0
+
+### Why
+- Required for UART half-duplex serial bus communication
+- Simplifies debugging and development
+- Easier integration with Raspberry Pi during prototyping phase
+
+### Why Not Direct GPIO UART Initially
+- More complicated half-duplex implementation
+- Harder debugging during early development
+
+---
+
+# Power Architecture
+
+## Planned Structure
+
 Battery
-Current Preferred Choice
-Sunpadow 3S 11.1V 7100mAh 70C XT60
-Why
-Better reputation and QC than generic LiPos
-Better voltage stability under servo spikes
-Suitable runtime (~20–40 min estimated)
-Enough headroom for future expansion
-Why Not Smaller 3500mAh
-Shorter runtime
-Less voltage stability under load
-Why Not Cheap Generic Brands
-Higher voltage sag
-Less reliable capacity/C rating
-Poorer long-term reliability
-Servo System
-Selected
-HX-35HM Bus Servo
-Why
-Intelligent serial bus servo with feedback
-Easier synchronization and scaling than PWM
-Better suited for ROS2 robotics
-More accessible and cheaper shipping than HX-30HM
-Why Not Standard PWM Servo
-No telemetry
-Harder synchronization
-Poor scalability for 18 DOF robot
-Why HX-30HM Not Selected Yet
-High shipping cost
-Current phase focuses on software/architecture validation first
-Servo Communication
-Selected
-Hiwonder BusLinker V3.0
-Why
-Required for UART half-duplex bus servo communication
-Simplifies Pi integration and debugging
-Why Not Direct GPIO UART Initially
-More complicated half-duplex handling
-Harder debugging during prototype phase
-Power Architecture
-Planned Structure
-Battery
- ├── 52Pi PD → Pi5
- └── BusLinker → Servos
-Shared Ground
+├── 52Pi PD Board → Raspberry Pi 5
+└── BusLinker → Servos
 
-Required for UART communication reference.
+### Shared Ground
+Required for stable UART communication reference between Pi and servo system.
 
-Why Separate Servo and Pi Power
-Prevent servo noise/current spikes from destabilizing Pi
-Improve communication and system stability
-Current / Voltage Monitoring
-Discussed Options
-INA219
-INA226
-ACS758
-Current Conclusion
-INA219 suitable for Pi rail monitoring
-ACS758/INA226 better for high-current servo monitoring
-Why Monitoring Matters
-Battery protection
-Runtime estimation
-Undervoltage detection
-Power characterization
-IMU
-Recommended Placement
-Near robot center of mass
-Rigidly mounted on body center
-Recommended Sensors
-BNO085
-BNO055
-ICM-20948
-Why
-Orientation estimation
-Balance/stabilization
-Future terrain adaptation
-Battery Protection / BMS
-Current Approach
+### Why Separate Pi and Servo Power Paths
+- Reduces electrical noise from servo current spikes
+- Improves Pi stability and communication reliability
 
+---
+
+# Current / Voltage Monitoring
+
+## Discussed Options
+- INA219
+- INA226
+- ACS758
+
+### Current Conclusion
+- INA219 suitable for Pi rail monitoring
+- ACS758 or INA226 preferred for high-current servo monitoring
+
+### Why Monitoring Matters
+- Battery protection
+- Runtime estimation
+- Undervoltage detection
+- Power characterization
+
+---
+
+# IMU System
+
+## Recommended Placement
+- Near robot center of mass
+- Rigidly mounted on main chassis
+
+## Recommended Sensors
+- BNO085
+- BNO055
+- ICM-20948
+
+### Why
+- Orientation estimation
+- Balance and stabilization
+- Future terrain adaptation and navigation
+
+---
+
+# Battery Protection / BMS
+
+## Current Approach
 Prefer:
-
-voltage monitoring
-software low-voltage detection
-controlled shutdown
+- voltage monitoring
+- software low-voltage detection
+- controlled shutdown
 
 instead of aggressive BMS cutoff.
 
-Why
-
+### Why
 Hard cutoff during locomotion may:
+- instantly collapse robot
+- corrupt Raspberry Pi filesystem
+- create unsafe shutdown behavior
 
-instantly collapse robot
-corrupt Pi filesystem
-create unsafe shutdown behavior
-Fuse Protection
-Recommended
-Automotive fuse near battery
-Why
+---
 
-Protect against:
+# Fuse Protection
 
-short circuit
-wiring failure
-LiPo overcurrent events
-PCB Strategy
-Current Decision
+## Recommended
+- Automotive fuse near battery output
 
+### Why
+Protects against:
+- short circuit
+- wiring failure
+- overcurrent conditions
+
+---
+
+# PCB Strategy
+
+## Current Decision
 No custom PCB yet.
 
-Why
-
+### Why
 Still validating:
+- architecture
+- locomotion
+- communication
+- sensor layout
+- power system
 
-architecture
-wiring
-communication
-locomotion
-sensor layout
-Current Approach
-
+### Current Approach
 Use:
+- modular boards
+- breakout modules
+- terminal blocks
 
-modular boards
-breakout modules
-terminal blocks
-Future PCB May Include
-power distribution
-fuse protection
-capacitor bank
-sensor/UART headers
-cooling/fan headers
-Development Strategy
-Current Plan
+### Future PCB May Include
+- power distribution
+- fuse protection
+- capacitor bank
+- UART routing
+- sensor headers
+- cooling headers
 
+---
+
+# Development Strategy
+
+## Current Plan
 Start with:
+- 1 leg (3 servos)
 
-1 leg = 3 servos
+before scaling to full 18-servo hexapod.
 
-before full 18-servo build.
-
-Why
-
+### Why
 Allows validation of:
+- IK
+- trajectory planning
+- ROS2 nodes
+- communication system
+- power behavior
+- mechanical tuning
 
-IK
-trajectory planning
-ROS2 nodes
-communication
-power behavior
-mechanical tuning
-
-before committing to full system cost.
+before full system deployment.
 
