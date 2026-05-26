@@ -281,7 +281,8 @@ Pet interaction behaviors
 
 # Power System
 
-## Pi Voltage Regulator (since I want to use the main power source only from 3s LiPo battery we need to step the voltage down)
+## Pi Voltage Regulator 
+- Since, I want to use the main power source only from 3s LiPo battery we need to step the voltage down
 ### Selected
 - 52Pi RPi 5 PD Board
 
