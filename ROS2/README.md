@@ -94,6 +94,6 @@ robot_bringup
 - I used FoxGlove, a robotics visualization and debugging platform, to visualize the gait data which support the topic that are sent from ROS2 Node.
 - This is only testing the accuracy of the walking cycle, pattern and timing. I planned to move forward to RVis and Gazebo soon, to simulate the physic.
 
-![Body_Ctrl.sim](Screen+Recording+2026-06-05+022729.gif)
+![Body_Ctrl.sim](Vid/Screen+Recording+2026-06-05+022729.gif)
 
-![Tripod_Walking.sim](Screen+Recording+2026-06-05+022814.gif)
+![Tripod_Walking.sim](Vid/Screen+Recording+2026-06-05+022814.gif)
